@@ -14,7 +14,7 @@ $(document).ready(function() {
 	};
 
 
-	var save = function() {
+	var save = function(){
 		console.log('hostname: ' + host + ' pathname: ' + path);
 
 		// Clear object as dropdown checks don't get unset
@@ -56,11 +56,47 @@ $(document).ready(function() {
 		storage[storageKey] = storageObjectString;
 
 		console.log(storage[storageKey]);
-	}
+	};
 
-	var startTimer = function() {
+	var load = function(){
+		storageObject = JSON.parse(storageObjectString);
+
+		//Fields
+		fieldNames = Object.keys(storageObject['fields']);
+		for(var name in fieldNames){
+			selector = 'input[name="' + name + '"]';
+			$(selector).val(storageObject['fields'][name]);
+		};
+
+		//Radios
+		radioNames = Object.keys(storageObject['radios']);
+		for(var name in radioNames){
+			selector = 'input[name="' + name + '"]';
+			$(selector).val(storageObject['radios'][name]);
+		};
+
+		//Checkbox
+		checkboxNames = Object.keys(storageObject['checkboxes']);
+		for(var name in checkboxNames){
+			selector = 'input[name="' + name + '"]';
+			$(selector).prop('checked', true);
+		};
+
+		//Dropdowns
+		dropdownNames = Object.keys(storageObject['dropdowns']);
+		for(var name in dropdownNames){
+			selector = 'select[name="' + name + '"]';
+			$(selector).val(storageObject['dropdowns'][name]);
+		};
+
+	};
+
+	var startTimer = function(){
 		window.setInterval(save, saveInterval);
 	}
 
-	startTimer();
+	$('#save').click(save);
+	$('#load').click(load);
+
+	//startTimer();
 })
