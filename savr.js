@@ -17,7 +17,7 @@ $(document).ready(function() {
 	var save = function(){
 		console.log('hostname: ' + host + ' pathname: ' + path);
 
-		// Clear object as dropdown checks don't get unset
+		// Clear object as checkbox checks don't get unset
 		storageObject['checkboxes'] = {};
 
 		// Fields
@@ -59,20 +59,31 @@ $(document).ready(function() {
 	};
 
 	var load = function(){
+		console.log('LOAD');
 		storageObject = JSON.parse(storageObjectString);
 
 		//Fields
 		fieldNames = Object.keys(storageObject['fields']);
-		for(var name in fieldNames){
+		for(var i = 0; i < fieldNames.length; i++){
+			name = fieldNames[i];
+			value = storageObject['fields'][name];
 			selector = 'input[name="' + name + '"]';
-			$(selector).val(storageObject['fields'][name]);
+			$(selector).val(value);
+			console.log('name: ' + name + ' value: ' + value);
 		};
 
 		//Radios
+		// Uncheck all radios
+		$('input[type="radio"]').each(function(){
+			$(this).prop('checked', false);
+		});
+
 		radioNames = Object.keys(storageObject['radios']);
-		for(var name in radioNames){
-			selector = 'input[name="' + name + '"]';
-			$(selector).val(storageObject['radios'][name]);
+		for(var i = 0; i < radioNames.length; i++){
+			name = radioNames[i];
+			value = storageObject['radios'][name];
+			selector = 'input[name="' + name + '"][value="' + value + '"]';
+			$(selector).prop('checked', true);
 		};
 
 		//Checkbox
