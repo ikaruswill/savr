@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" ng-app="loot_v1">
+
+<head>
+	<title>Form</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="forms.css" />
+</head>
+
+<body>
+    <div>
+        <form action="index.html" method="POST">
+            Text fields
+            <div>
+                First Name:
+                <input type="text" name="first_name" id="first_name" value="will"></input>
+                Last Name:
+                <input type="text" name="last_name" id="first_name" value="ho"></input>
+                Email:
+                <input type="email" name="email" id="first_name" value="will.ho@gmail.com"></input>
+            </div>
+            <div>
+                <p>Dropdowns</p>
+                <select name="panel_model_number">
+                    <option value="1">SPC1000</option>
+                    <option value="2" selected>SPC2000</option>
+                </select>
+            </div>
+            <div>
+                <p>Radios</p>
+                <input type="radio" name="i_am_owner" value="yes">Yes!</input><br>
+                <input type="radio" name="i_am_owner" value="no" checked>No!</input>
+            </div>
+            <div>
+                <p>Checkboxes</p>
+                <input type="checkbox" name="grants" value="pa_funding">PA Funding</input><br>
+                <input type="checkbox" name="grants" value="sunshine" checked>Sunshine</input>
+            </div>
+
+            <button>Submit!</button>
+        </form>
+        
+
+    </div>
+    <script src="jquery-1.8.3.js" type="text/javascript"></script>
+    <script src="savr.js" type="text/javascript"></script>
+</body>
+
+</html>
