@@ -14,6 +14,7 @@ $(document).ready(function() {
 	};
 
 
+
 	var save = function(){
 		console.log('hostname: ' + host + ' pathname: ' + path);
 
@@ -60,6 +61,11 @@ $(document).ready(function() {
 
 	var load = function(){
 		console.log('LOAD');
+		// Check if first save has been done
+		if(typeof storage[storageKey] == 'undefined') {
+			return;
+		}
+		console.log('Parsing: ' + storage[storageKey]);
 		storageObject = JSON.parse(storage[storageKey]);
 
 		//Fields
@@ -120,5 +126,6 @@ $(document).ready(function() {
 	$('#save').click(save);
 	$('#load').click(load);
 
-	//startTimer();
+	load();
+	startTimer();
 })
