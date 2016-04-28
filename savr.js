@@ -84,20 +84,31 @@ $(document).ready(function() {
 			value = storageObject['radios'][name];
 			selector = 'input[name="' + name + '"][value="' + value + '"]';
 			$(selector).prop('checked', true);
+			console.log('name: ' + name + ' value: ' + value);
 		};
 
 		//Checkbox
+		// Uncheck all checkboxes
+		$('input[type="checkbox"]').each(function(){
+			$(this).prop('checked', false);
+		});
+
 		checkboxNames = Object.keys(storageObject['checkboxes']);
-		for(var name in checkboxNames){
-			selector = 'input[name="' + name + '"]';
+		for(var i = 0; i < checkboxNames.length; i++){
+			name = checkboxNames[i];
+			value = storageObject['checkboxes'][name];
+			selector = 'input[name="' + name + '"][value="' + value + '"]';
 			$(selector).prop('checked', true);
+			console.log('name: ' + name + ' value: ' + value);
 		};
 
 		//Dropdowns
 		dropdownNames = Object.keys(storageObject['dropdowns']);
-		for(var name in dropdownNames){
-			selector = 'select[name="' + name + '"]';
-			$(selector).val(storageObject['dropdowns'][name]);
+		for(var i = 0; i < dropdownNames.length; i++){
+			name = dropdownNames[i];
+			value = storageObject['dropdowns'][name];
+			selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
+			$(selector).prop('selected', true);
 		};
 
 	};
