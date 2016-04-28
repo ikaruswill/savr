@@ -60,7 +60,7 @@ $(document).ready(function() {
 
 	var load = function(){
 		console.log('LOAD');
-		storageObject = JSON.parse(storageObjectString);
+		storageObject = JSON.parse(storage[storageKey]);
 
 		//Fields
 		fieldNames = Object.keys(storageObject['fields']);
