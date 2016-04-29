@@ -30,6 +30,7 @@ $(document).ready(function() {
 	options = {
 		namespace     = 'savr';
 		saveInterval  = '10000';
+		clearOnSubmit = true;
 		storageKey    = [namespace, path].join('.');
 		storage       = window.localStorage;
 	}
@@ -145,13 +146,23 @@ $(document).ready(function() {
 
 	};
 
+	var clear = function(){
+		options.storage.removeItem(options.storageKey);
+	};
+
 	var startTimer = function(){
 		window.setInterval(save, saveInterval);
-	}
+	};
 
 	$('#save').click(save);
 	$('#load').click(load);
 
 	load();
 	startTimer();
+
+	$('form').submit(function(){
+		if(clearOnSubmit){
+			clear();
+		}
+	});
 })
