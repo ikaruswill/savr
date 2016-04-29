@@ -22,16 +22,18 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
 **********************************************************************************************/
 
-
-
 $(document).ready(function() {
 	console.log('run');
-	host          = window.location.hostname;
-	path          = window.location.pathname;
-	namespace     = 'savr';
-	saveInterval  = '10000';
-	storageKey    = [namespace, path].join('.');
-	storage       = window.localStorage;
+	host = window.location.hostname;
+	path = window.location.pathname;
+
+	options = {
+		namespace     = 'savr';
+		saveInterval  = '10000';
+		storageKey    = [namespace, path].join('.');
+		storage       = window.localStorage;
+	}
+	
 	storageObject = {
 		fields:{},
 		radios:{},
@@ -76,21 +78,21 @@ $(document).ready(function() {
 			storageObject['dropdowns'][name] = value;
 			console.log('name: ' + name + ' selected: ' + value);
 		});
+		
+		storageObjectString                 = JSON.stringify(storageObject);
+		options.storage[options.storageKey] = storageObjectString;
 
-		storageObjectString = JSON.stringify(storageObject);
-		storage[storageKey] = storageObjectString;
-
-		console.log(storage[storageKey]);
+		console.log(options.storage[options.storageKey]);
 	};
 
 	var load = function(){
 		console.log('LOAD');
 		// Check if first save has been done
-		if(typeof storage[storageKey] == 'undefined') {
+		if(typeof options.storage[options.storageKey] == 'undefined') {
 			return;
 		}
-		console.log('Parsing: ' + storage[storageKey]);
-		storageObject = JSON.parse(storage[storageKey]);
+		console.log('Parsing: ' + options.storage[options.storageKey]);
+		storageObject = JSON.parse(options.storage[options.storageKey]);
 
 		//Fields
 		fieldNames = Object.keys(storageObject['fields']);
