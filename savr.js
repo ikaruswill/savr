@@ -26,12 +26,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
 $(document).ready(function() {
 	console.log('run');
-	host = window.location.hostname;
-	path = window.location.pathname;
-	namespace = 'savr';
-	saveInterval = '10000';
-	storageKey = [namespace, path].join('.');
-	storage = window.localStorage;
+	host          = window.location.hostname;
+	path          = window.location.pathname;
+	namespace     = 'savr';
+	saveInterval  = '10000';
+	storageKey    = [namespace, path].join('.');
+	storage       = window.localStorage;
 	storageObject = {
 		fields:{},
 		radios:{},
@@ -47,32 +47,32 @@ $(document).ready(function() {
 
 		// Fields
 		$('input:not([type="radio"]):not([type="checkbox"])').each(function(){
-			name = $(this).attr('name');
-			value = $(this).val();
+			name                          = $(this).attr('name');
+			value                         = $(this).val();
 			storageObject['fields'][name] = value; 
 			console.log('name: ' + name + ' value: ' + value);
 		});
 
 		// Radios
 		$('input[type="radio"]:checked').each(function(){
-			name = $(this).attr('name');
-			value = $(this).val();
+			name                          = $(this).attr('name');
+			value                         = $(this).val();
 			storageObject['radios'][name] = value;
 			console.log('name: ' + name + ' value: ' + value);
 		});
 
 		// Checkbox
 		$('input[type="checkbox"]:checked').each(function(){
-			name = $(this).attr('name');
-			value = $(this).val();
+			name                              = $(this).attr('name');
+			value                             = $(this).val();
 			storageObject['checkboxes'][name] = value;
 			console.log('name: ' + name + ' value: ' + value);
 		});
 
 		// Dropdowns
 		$('select').each(function(){
-			name = $(this).attr('name');
-			value = $(this).children(':selected').val();
+			name                             = $(this).attr('name');
+			value                            = $(this).children(':selected').val();
 			storageObject['dropdowns'][name] = value;
 			console.log('name: ' + name + ' selected: ' + value);
 		});
@@ -95,8 +95,8 @@ $(document).ready(function() {
 		//Fields
 		fieldNames = Object.keys(storageObject['fields']);
 		for(var i = 0; i < fieldNames.length; i++){
-			name = fieldNames[i];
-			value = storageObject['fields'][name];
+			name     = fieldNames[i];
+			value    = storageObject['fields'][name];
 			selector = 'input[name="' + name + '"]';
 			$(selector).val(value);
 			console.log('name: ' + name + ' value: ' + value);
@@ -110,8 +110,8 @@ $(document).ready(function() {
 
 		radioNames = Object.keys(storageObject['radios']);
 		for(var i = 0; i < radioNames.length; i++){
-			name = radioNames[i];
-			value = storageObject['radios'][name];
+			name     = radioNames[i];
+			value    = storageObject['radios'][name];
 			selector = 'input[name="' + name + '"][value="' + value + '"]';
 			$(selector).prop('checked', true);
 			console.log('name: ' + name + ' value: ' + value);
@@ -125,8 +125,8 @@ $(document).ready(function() {
 
 		checkboxNames = Object.keys(storageObject['checkboxes']);
 		for(var i = 0; i < checkboxNames.length; i++){
-			name = checkboxNames[i];
-			value = storageObject['checkboxes'][name];
+			name     = checkboxNames[i];
+			value    = storageObject['checkboxes'][name];
 			selector = 'input[name="' + name + '"][value="' + value + '"]';
 			$(selector).prop('checked', true);
 			console.log('name: ' + name + ' value: ' + value);
@@ -135,8 +135,8 @@ $(document).ready(function() {
 		//Dropdowns
 		dropdownNames = Object.keys(storageObject['dropdowns']);
 		for(var i = 0; i < dropdownNames.length; i++){
-			name = dropdownNames[i];
-			value = storageObject['dropdowns'][name];
+			name     = dropdownNames[i];
+			value    = storageObject['dropdowns'][name];
 			selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
 			$(selector).prop('selected', true);
 		};
