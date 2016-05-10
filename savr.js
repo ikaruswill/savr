@@ -21,8 +21,7 @@ Savr is a script that saves (the day) your form states by using your browser's l
 to prevent data loss on closing the browser or navigating away when filling in forms.
 
 **********************************************************************************************/
-
-$(document).ready(function() {
+(function($, window) {
 	console.log('run');
 	host = window.location.hostname;
 	path = window.location.pathname;
@@ -154,9 +153,6 @@ $(document).ready(function() {
 		window.setInterval(save, saveInterval);
 	};
 
-	$('#save').click(save);
-	$('#load').click(load);
-
 	load();
 	startTimer();
 
@@ -165,4 +161,16 @@ $(document).ready(function() {
 			clear();
 		}
 	});
-})
+
+
+	$.fn.savr = function(action) {
+		switch(action){
+			case 'start':
+			case 'stop':
+			case 'clear':
+			default:
+			break;
+		}
+		return this;
+	}
+}(jQuery, window));
