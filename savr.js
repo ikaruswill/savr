@@ -42,7 +42,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 	};
 
 	var save = function(obj){
-		console.log(' pathname: ' + path);
+		console.log('SAVE');
 
 		// Clear object as checkbox checks don't get unset
 		storageObject['checkboxes'] = {};
@@ -79,18 +79,19 @@ to prevent data loss on closing the browser or navigating away when filling in f
 			console.log('name: ' + name + ' selected: ' + value);
 		});
 		
-		storageObjectString                 = JSON.stringify(storageObject);
+		storageObjectString         = JSON.stringify(storageObject);
 		options.storage[storageKey] = storageObjectString;
 
 		console.log(options.storage[storageKey]);
 	};
 
-	var load = function(){
+	var load = function(obj){
 		console.log('LOAD');
 		// Check if first save has been done
 		if(typeof options.storage[storageKey] == 'undefined') {
 			return;
-		}
+		};
+
 		console.log('Parsing: ' + options.storage[storageKey]);
 		storageObject = JSON.parse(options.storage[storageKey]);
 
@@ -100,13 +101,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
 			name     = fieldNames[i];
 			value    = storageObject['fields'][name];
 			selector = 'input[name="' + name + '"]';
-			$(selector).val(value);
+			obj.find(selector).val(value);
 			console.log('name: ' + name + ' value: ' + value);
 		};
 
 		//Radios
 		// Uncheck all radios
-		$('input[type="radio"]').each(function(){
+		obj.find('input[type="radio"]').each(function(){
 			$(this).prop('checked', false);
 		});
 
@@ -115,13 +116,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
 			name     = radioNames[i];
 			value    = storageObject['radios'][name];
 			selector = 'input[name="' + name + '"][value="' + value + '"]';
-			$(selector).prop('checked', true);
+			obj.find(selector).prop('checked', true);
 			console.log('name: ' + name + ' value: ' + value);
 		};
 
 		//Checkbox
 		// Uncheck all checkboxes
-		$('input[type="checkbox"]').each(function(){
+		obj.find('input[type="checkbox"]').each(function(){
 			$(this).prop('checked', false);
 		});
 
@@ -130,7 +131,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 			name     = checkboxNames[i];
 			value    = storageObject['checkboxes'][name];
 			selector = 'input[name="' + name + '"][value="' + value + '"]';
-			$(selector).prop('checked', true);
+			obj.find(selector).prop('checked', true);
 			console.log('name: ' + name + ' value: ' + value);
 		};
 
@@ -140,7 +141,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 			name     = dropdownNames[i];
 			value    = storageObject['dropdowns'][name];
 			selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
-			$(selector).prop('selected', true);
+			obj.find(selector).prop('selected', true);
 		};
 
 	};
