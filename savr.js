@@ -31,11 +31,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
         namespace     : 'savr',
         saveInterval  : '10000',
         clearOnSubmit : true,
-        storage       : window.localStorage
+        storageType   : 'localStorage'
     };
     var timer;
-    var storageKey = [options.namespace, path];
-    storageKey     = storageKey.join('.');
+    var storage       = window[options.storageType];
+    var storageKey    = [options.namespace, path];
+    storageKey        = storageKey.join('.');
     var storageObject = {
         fields:{},
         radios:{},
@@ -87,9 +88,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
         });
         
         var storageObjectString         = JSON.stringify(storageObject);
-        options.storage[storageKey] = storageObjectString;
+        storage[storageKey] = storageObjectString;
 
-        console.log(options.storage[storageKey]);
+        console.log(storage[storageKey]);
     };
 
     /**
@@ -100,12 +101,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
     var load = function(obj){
         console.log('LOAD');
         // Check if first save has been done
-        if(typeof options.storage[storageKey] == 'undefined') {
+        if(typeof storage[storageKey] == 'undefined') {
             return;
         }
 
-        console.log('Parsing: ' + options.storage[storageKey]);
-        storageObject = JSON.parse(options.storage[storageKey]);
+        console.log('Parsing: ' + storage[storageKey]);
+        storageObject = JSON.parse(storage[storageKey]);
 
         //Fields
         var fieldNames = Object.keys(storageObject.fields);
@@ -159,7 +160,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
 
     var clear = function(){
-        options.storage.removeItem(storageKey);
+        storage.removeItem(storageKey);
     };
 
     var startTimer = function(obj){
@@ -172,8 +173,25 @@ to prevent data loss on closing the browser or navigating away when filling in f
         window.clearInterval(timer);
     };
 
-    // 
+    var supports = function(type) {
+        try {
+            var _s = window[type];
+            var _x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return false;
+        }
+    };
+
+    // jQuery plugin aspect
     $.fn.savr = function(action) {
+        if(!supports(options.storageType)) {
+            return this;
+        }
+
         switch(action){
             case 'start':
                 startTimer(this);
