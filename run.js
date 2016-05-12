@@ -1,6 +1,10 @@
 $(document).ready(function(){
-	$('#dropdown').savr('save');
+	$('form').savr('start');
 
-	$('#save').click(save);
-	$('#load').click(load);
+	$('#save').click(function(){
+		$('form').savr('save');
+	});
+	$('#load').click(function(){
+		$('form').savr('load');
+	})
 })
