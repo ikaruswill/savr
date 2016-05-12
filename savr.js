@@ -177,8 +177,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
         try {
             var _s = window[type];
             var _x = '__storage_test__';
-            storage.setItem(x, x);
-            storage.removeItem(x);
+            storage.setItem(_x, _x);
+            storage.removeItem(_x);
             return true;
         }
         catch(e) {
