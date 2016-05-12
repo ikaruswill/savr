@@ -23,16 +23,16 @@ to prevent data loss on closing the browser or navigating away when filling in f
 **********************************************************************************************/
 (function($, window) {
 	console.log('run');
-	host = window.location.hostname;
 	path = window.location.pathname;
 
 	options = {
-		namespace     = 'savr';
-		saveInterval  = '10000';
-		clearOnSubmit = true;
-		storageKey    = [namespace, path].join('.');
-		storage       = window.localStorage;
+		namespace     : 'savr',
+		saveInterval  : '10000',
+		clearOnSubmit : true,
+		storage       : window.localStorage
 	}
+
+	storageKey = [options.namespace, path].join('.');
 	
 	storageObject = {
 		fields:{},
@@ -80,19 +80,19 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		});
 		
 		storageObjectString                 = JSON.stringify(storageObject);
-		options.storage[options.storageKey] = storageObjectString;
+		options.storage[storageKey] = storageObjectString;
 
-		console.log(options.storage[options.storageKey]);
+		console.log(options.storage[storageKey]);
 	};
 
 	var load = function(){
 		console.log('LOAD');
 		// Check if first save has been done
-		if(typeof options.storage[options.storageKey] == 'undefined') {
+		if(typeof options.storage[storageKey] == 'undefined') {
 			return;
 		}
-		console.log('Parsing: ' + options.storage[options.storageKey]);
-		storageObject = JSON.parse(options.storage[options.storageKey]);
+		console.log('Parsing: ' + options.storage[storageKey]);
+		storageObject = JSON.parse(options.storage[storageKey]);
 
 		//Fields
 		fieldNames = Object.keys(storageObject['fields']);
@@ -146,26 +146,19 @@ to prevent data loss on closing the browser or navigating away when filling in f
 	};
 
 	var clear = function(){
-		options.storage.removeItem(options.storageKey);
+		options.storage.removeItem(storageKey);
 	};
 
 	var startTimer = function(){
 		window.setInterval(save, saveInterval);
 	};
 
-	load();
-	startTimer();
-
-	$('form').submit(function(){
-		if(clearOnSubmit){
-			clear();
-		}
-	});
-
 
 	$.fn.savr = function(action) {
 		switch(action){
 			case 'start':
+			save(this);
+			break;
 			case 'stop':
 			case 'clear':
 			default:
