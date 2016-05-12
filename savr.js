@@ -21,161 +21,178 @@ Savr is a script that saves (the day) your form states by using your browser's l
 to prevent data loss on closing the browser or navigating away when filling in forms.
 
 **********************************************************************************************/
+
 (function($, window) {
-	console.log('RUN');
-	// Parameters
-	path = window.location.pathname;
+    console.log('RUN');
+    // Parameters
+    var path = window.location.pathname;
 
-	options = {
-		namespace     : 'savr',
-		saveInterval  : '10000',
-		clearOnSubmit : true,
-		storage       : window.localStorage
-	}
+    var options = {
+        namespace     : 'savr',
+        saveInterval  : '10000',
+        clearOnSubmit : true,
+        storage       : window.localStorage
+    };
+    var timer;
+    var storageKey = [options.namespace, path];
+    storageKey     = storageKey.join('.');
+    var storageObject = {
+        fields:{},
+        radios:{},
+        checkboxes:{},
+        dropdowns:{}
+    };
 
-	storageKey = [options.namespace, path].join('.');
-	
-	storageObject = {
-		fields:{},
-		radios:{},
-		checkboxes:{},
-		dropdowns:{}
-	};
+    /**
+     * Takes in a jQuery object and saves all input and select element data into localStorage
+     *
+     * @param {jQuery} <form> or any enclosing element
+     */
+    var save = function(obj){
+        console.log('SAVE');
 
-	/**
-	 * Takes in a jQuery object and saves all input and select element data into localStorage
-	 *
-	 * @param {jQuery} <form> or any enclosing element
-	 */
-	var save = function(obj){
-		console.log('SAVE');
+        // Clear object as checkbox checks don't get unset
+        storageObject.checkboxes = {};
 
-		// Clear object as checkbox checks don't get unset
-		storageObject['checkboxes'] = {};
+        // Fields
+        obj.find('input:not([type="radio"]):not([type="checkbox"])').each(function(){
+            var name                          = $(this).attr('name');
+            var value                         = $(this).val();
+            storageObject.fields[name] = value; 
+            console.log('name: ' + name + ' value: ' + value);
+        });
 
-		// Fields
-		obj.find('input:not([type="radio"]):not([type="checkbox"])').each(function(){
-			name                          = $(this).attr('name');
-			value                         = $(this).val();
-			storageObject['fields'][name] = value; 
-			console.log('name: ' + name + ' value: ' + value);
-		});
+        // Radios
+        obj.find('input[type="radio"]:checked').each(function(){
+            var name                          = $(this).attr('name');
+            var value                         = $(this).val();
+            storageObject.radios[name] = value;
+            console.log('name: ' + name + ' value: ' + value);
+        });
 
-		// Radios
-		obj.find('input[type="radio"]:checked').each(function(){
-			name                          = $(this).attr('name');
-			value                         = $(this).val();
-			storageObject['radios'][name] = value;
-			console.log('name: ' + name + ' value: ' + value);
-		});
+        // Checkbox
+        obj.find('input[type="checkbox"]:checked').each(function(){
+            var name                              = $(this).attr('name');
+            var value                             = $(this).val();
+            storageObject.checkboxes[name] = value;
+            console.log('name: ' + name + ' value: ' + value);
+        });
 
-		// Checkbox
-		obj.find('input[type="checkbox"]:checked').each(function(){
-			name                              = $(this).attr('name');
-			value                             = $(this).val();
-			storageObject['checkboxes'][name] = value;
-			console.log('name: ' + name + ' value: ' + value);
-		});
+        // Dropdowns
+        obj.find('select').each(function(){
+            var name                             = $(this).attr('name');
+            var value                            = $(this).children(':selected').val();
+            storageObject.dropdowns[name] = value;
+            console.log('name: ' + name + ' selected: ' + value);
+        });
+        
+        var storageObjectString         = JSON.stringify(storageObject);
+        options.storage[storageKey] = storageObjectString;
 
-		// Dropdowns
-		obj.find('select').each(function(){
-			name                             = $(this).attr('name');
-			value                            = $(this).children(':selected').val();
-			storageObject['dropdowns'][name] = value;
-			console.log('name: ' + name + ' selected: ' + value);
-		});
-		
-		storageObjectString         = JSON.stringify(storageObject);
-		options.storage[storageKey] = storageObjectString;
+        console.log(options.storage[storageKey]);
+    };
 
-		console.log(options.storage[storageKey]);
-	};
+    /**
+     * Takes in a jQuery object and loads all input and select element data from localStorage
+     *
+     * @param {jQuery} <form> or any enclosing element
+     */
+    var load = function(obj){
+        console.log('LOAD');
+        // Check if first save has been done
+        if(typeof options.storage[storageKey] == 'undefined') {
+            return;
+        }
 
-	/**
-	 * Takes in a jQuery object and loads all input and select element data from localStorage
-	 *
-	 * @param {jQuery} <form> or any enclosing element
-	 */
-	var load = function(obj){
-		console.log('LOAD');
-		// Check if first save has been done
-		if(typeof options.storage[storageKey] == 'undefined') {
-			return;
-		};
+        console.log('Parsing: ' + options.storage[storageKey]);
+        storageObject = JSON.parse(options.storage[storageKey]);
 
-		console.log('Parsing: ' + options.storage[storageKey]);
-		storageObject = JSON.parse(options.storage[storageKey]);
+        //Fields
+        var fieldNames = Object.keys(storageObject.fields);
+        for(var i = 0; i < fieldNames.length; i++){
+            var name     = fieldNames[i];
+            var value    = storageObject.fields[name];
+            var selector = 'input[name="' + name + '"]';
+            obj.find(selector).val(value);
+            console.log('name: ' + name + ' value: ' + value);
+        }
 
-		//Fields
-		fieldNames = Object.keys(storageObject['fields']);
-		for(var i = 0; i < fieldNames.length; i++){
-			name     = fieldNames[i];
-			value    = storageObject['fields'][name];
-			selector = 'input[name="' + name + '"]';
-			obj.find(selector).val(value);
-			console.log('name: ' + name + ' value: ' + value);
-		};
+        //Radios
+        // Uncheck all radios
+        obj.find('input[type="radio"]').each(function(){
+            $(this).prop('checked', false);
+        });
 
-		//Radios
-		// Uncheck all radios
-		obj.find('input[type="radio"]').each(function(){
-			$(this).prop('checked', false);
-		});
+        var radioNames = Object.keys(storageObject.radios);
+        for(var i = 0; i < radioNames.length; i++){
+            var name     = radioNames[i];
+            var value    = storageObject.radios[name];
+            var selector = 'input[name="' + name + '"][value="' + value + '"]';
+            obj.find(selector).prop('checked', true);
+            console.log('name: ' + name + ' value: ' + value);
+        }
 
-		radioNames = Object.keys(storageObject['radios']);
-		for(var i = 0; i < radioNames.length; i++){
-			name     = radioNames[i];
-			value    = storageObject['radios'][name];
-			selector = 'input[name="' + name + '"][value="' + value + '"]';
-			obj.find(selector).prop('checked', true);
-			console.log('name: ' + name + ' value: ' + value);
-		};
+        //Checkbox
+        // Uncheck all checkboxes
+        obj.find('input[type="checkbox"]').each(function(){
+            $(this).prop('checked', false);
+        });
 
-		//Checkbox
-		// Uncheck all checkboxes
-		obj.find('input[type="checkbox"]').each(function(){
-			$(this).prop('checked', false);
-		});
+        var checkboxNames = Object.keys(storageObject.checkboxes);
+        for(var i = 0; i < checkboxNames.length; i++){
+            var name     = checkboxNames[i];
+            var value    = storageObject.checkboxes[name];
+            var selector = 'input[name="' + name + '"][value="' + value + '"]';
+            obj.find(selector).prop('checked', true);
+            console.log('name: ' + name + ' value: ' + value);
+        }
 
-		checkboxNames = Object.keys(storageObject['checkboxes']);
-		for(var i = 0; i < checkboxNames.length; i++){
-			name     = checkboxNames[i];
-			value    = storageObject['checkboxes'][name];
-			selector = 'input[name="' + name + '"][value="' + value + '"]';
-			obj.find(selector).prop('checked', true);
-			console.log('name: ' + name + ' value: ' + value);
-		};
+        //Dropdowns
+        var dropdownNames = Object.keys(storageObject.dropdowns);
+        for(var i = 0; i < dropdownNames.length; i++){
+            var name     = dropdownNames[i];
+            var value    = storageObject.dropdowns[name];
+            var selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
+            obj.find(selector).prop('selected', true);
+        }
 
-		//Dropdowns
-		dropdownNames = Object.keys(storageObject['dropdowns']);
-		for(var i = 0; i < dropdownNames.length; i++){
-			name     = dropdownNames[i];
-			value    = storageObject['dropdowns'][name];
-			selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
-			obj.find(selector).prop('selected', true);
-		};
+    };
 
-	};
+    var clear = function(){
+        options.storage.removeItem(storageKey);
+    };
 
-	var clear = function(){
-		options.storage.removeItem(storageKey);
-	};
+    var startTimer = function(obj){
+        timer = window.setInterval(function(){
+            save(obj);
+        }, options.saveInterval);
+    };
 
-	var startTimer = function(){
-		window.setInterval(save, saveInterval);
-	};
+    var stopTimer = function(){
+        window.clearInterval(timer);
+    };
 
-
-	$.fn.savr = function(action) {
-		switch(action){
-			case 'start':
-			save(this);
-			break;
-			case 'stop':
-			case 'clear':
-			default:
-			break;
-		}
-		return this;
-	}
+    // 
+    $.fn.savr = function(action) {
+        switch(action){
+            case 'start':
+                startTimer(this);
+                break;
+            case 'stop':
+                stopTimer();
+                break;
+            case 'clear':
+                clear();
+                break;
+            case 'save':
+                save(this);
+                break;
+            case 'load':
+                load(this);
+                break;
+            default:
+            break;
+        }
+        return this;
+    }
 }(jQuery, window));
