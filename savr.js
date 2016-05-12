@@ -41,14 +41,14 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		dropdowns:{}
 	};
 
-	var save = function(){
-		console.log('hostname: ' + host + ' pathname: ' + path);
+	var save = function(obj){
+		console.log(' pathname: ' + path);
 
 		// Clear object as checkbox checks don't get unset
 		storageObject['checkboxes'] = {};
 
 		// Fields
-		$('input:not([type="radio"]):not([type="checkbox"])').each(function(){
+		obj.find('input:not([type="radio"]):not([type="checkbox"])').each(function(){
 			name                          = $(this).attr('name');
 			value                         = $(this).val();
 			storageObject['fields'][name] = value; 
@@ -56,7 +56,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		});
 
 		// Radios
-		$('input[type="radio"]:checked').each(function(){
+		obj.find('input[type="radio"]:checked').each(function(){
 			name                          = $(this).attr('name');
 			value                         = $(this).val();
 			storageObject['radios'][name] = value;
@@ -64,7 +64,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		});
 
 		// Checkbox
-		$('input[type="checkbox"]:checked').each(function(){
+		obj.find('input[type="checkbox"]:checked').each(function(){
 			name                              = $(this).attr('name');
 			value                             = $(this).val();
 			storageObject['checkboxes'][name] = value;
@@ -72,7 +72,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		});
 
 		// Dropdowns
-		$('select').each(function(){
+		obj.find('select').each(function(){
 			name                             = $(this).attr('name');
 			value                            = $(this).children(':selected').val();
 			storageObject['dropdowns'][name] = value;
