@@ -22,7 +22,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
 **********************************************************************************************/
 (function($, window) {
-	console.log('run');
+	console.log('RUN');
+	// Parameters
 	path = window.location.pathname;
 
 	options = {
@@ -41,6 +42,11 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		dropdowns:{}
 	};
 
+	/**
+	 * Takes in a jQuery object and saves all input and select element data into localStorage
+	 *
+	 * @param {jQuery} <form> or any enclosing element
+	 */
 	var save = function(obj){
 		console.log('SAVE');
 
@@ -85,6 +91,11 @@ to prevent data loss on closing the browser or navigating away when filling in f
 		console.log(options.storage[storageKey]);
 	};
 
+	/**
+	 * Takes in a jQuery object and loads all input and select element data from localStorage
+	 *
+	 * @param {jQuery} <form> or any enclosing element
+	 */
 	var load = function(obj){
 		console.log('LOAD');
 		// Check if first save has been done
