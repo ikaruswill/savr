@@ -72,33 +72,33 @@ to prevent data loss on closing the browser or navigating away when filling in f
         storageObject.checkboxes = {};
 
         // Fields
-        obj.find('input:not([type="radio"]):not([type="checkbox"])').each(function(){
-            var name                          = $(this).attr('name');
-            var value                         = $(this).val();
+        obj.find('input[type="text"]').each(function(){
+            var name                   = $(this).attr('name');
+            var value                  = $(this).val();
             storageObject.fields[name] = value; 
             console.log('name: ' + name + ' value: ' + value);
         });
 
         // Radios
         obj.find('input[type="radio"]:checked').each(function(){
-            var name                          = $(this).attr('name');
-            var value                         = $(this).val();
+            var name                   = $(this).attr('name');
+            var value                  = $(this).val();
             storageObject.radios[name] = value;
             console.log('name: ' + name + ' value: ' + value);
         });
 
         // Checkbox
         obj.find('input[type="checkbox"]:checked').each(function(){
-            var name                              = $(this).attr('name');
-            var value                             = $(this).val();
+            var name                       = $(this).attr('name');
+            var value                      = $(this).val();
             storageObject.checkboxes[name] = value;
             console.log('name: ' + name + ' value: ' + value);
         });
 
         // Dropdowns
         obj.find('select').each(function(){
-            var name                             = $(this).attr('name');
-            var value                            = $(this).children(':selected').val();
+            var name                      = $(this).attr('name');
+            var value                     = $(this).children(':selected').val();
             storageObject.dropdowns[name] = value;
             console.log('name: ' + name + ' selected: ' + value);
         });
