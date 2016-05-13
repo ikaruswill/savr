@@ -103,8 +103,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             console.log('name: ' + name + ' selected: ' + value);
         });
         
-        var storageObjectString         = JSON.stringify(storageObject);
-        storage[storageKey] = storageObjectString;
+        var storageObjectString = JSON.stringify(storageObject);
+        storage[storageKey]     = storageObjectString;
 
         console.log(storage[storageKey]);
     };
