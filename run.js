@@ -6,5 +6,11 @@ $(document).ready(function(){
 	});
 	$('#load').click(function(){
 		$('form').savr('load');
-	})
+	});
+	$('#clear').click(function(){
+		$('form').savr('clear');
+	});
+	$('#exists').click(function(){
+		console.log($('form').savr('exists'));
+	});
 })
