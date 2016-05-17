@@ -35,9 +35,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
     var timers  = [];
     var storage = window[options.storageType];
-    var storageKey;
 
-    var setStorageKey = function(obj){
+    var getStorageKey = function(obj){
         var identifierSuffix = '';
 
         // Identify the selected form(s)
@@ -49,12 +48,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
             identifierSuffix = obj.attr('class').split(' ').join('.');
         }
 
-        // Set storageKey
-        storageKey = [options.namespace, path];
+        // Generate storageKey
+        var storageKeyArr = [options.namespace, path];
         if(identifierSuffix !== ''){
-            storageKey.push(identifierSuffix);
+            storageKeyArr.push(identifierSuffix);
         }
-        storageKey = storageKey.join('.');
+        return storageKeyArr.join('.');
     };
 
     /**
@@ -62,8 +61,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      *
      * @param {jQuery} <form> or any enclosing element
      */
-    var save = function(obj){
-        setStorageKey(obj);
+    var save = function(obj, storageKey){
         console.log('SAVE ' + storageKey);
 
         var storageObject = {
@@ -116,8 +114,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      *
      * @param {jQuery} <form> or any enclosing element
      */
-    var load = function(obj){
-        setStorageKey(obj);
+    var load = function(obj, storageKey){
         console.log('LOAD ' + storageKey);
         // Check if first save has been done
         if(typeof storage[storageKey] == 'undefined') {
@@ -178,8 +175,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     };
 
-    var exists = function(obj){
-        setStorageKey(obj);
+    var exists = function(storageKey){
         //console.log('EXISTS' + storageKey);
         if(typeof storage[storageKey] == 'undefined') {
             return false;
@@ -187,19 +183,18 @@ to prevent data loss on closing the browser or navigating away when filling in f
         return true;
     };
 
-    var clear = function(obj){
-        setStorageKey(obj);
+    var clear = function(storageKey){
         storage.removeItem(storageKey);
     };
 
-    var startTimer = function(obj){
+    var startTimer = function(obj, storageKey){
         timer = window.setInterval(function(){
-            save(obj);
+            save(obj, storageKey);
         }, options.saveInterval);
         timers[storageKey] = timer;
     };
 
-    var stopTimer = function(obj){
+    var stopTimer = function(storageKey){
         window.clearInterval(timers.storageKey);
     };
 
@@ -226,7 +221,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
         if(action == 'exists'){
             var allExists = true;
             this.each(function(){
-                allExists = exists($(this));
+                var storageKey = getStorageKey($(this));
+                allExists = exists(storageKey);
                 if(!allExists){
                     return false;
                 }
@@ -235,24 +231,24 @@ to prevent data loss on closing the browser or navigating away when filling in f
         }
 
         return this.each(function(){
-            setStorageKey($(this));
+            var storageKey = getStorageKey($(this));
             console.log('EACH ' + storageKey);
             // Function body
             switch(action){
                 case 'start':
-                    startTimer($(this));
+                    startTimer($(this), storageKey);
                     break;
                 case 'stop':
-                    stopTimer();
+                    stopTimer(storageKey);
                     break;
                 case 'clear':
-                    clear($(this));
+                    clear(storageKey);
                     break;
                 case 'save':
-                    save($(this));
+                    save($(this), storageKey);
                     break;
                 case 'load':
-                    load($(this));
+                    load($(this), storageKey);
                     break;
                 default:
                     break;
