@@ -232,7 +232,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
         return this.each(function(){
             var storageKey = getStorageKey($(this));
-            console.log('EACH ' + storageKey);
+            console.log('Action: ' + action + ' ' + storageKey);
             // Function body
             switch(action){
                 case 'start':
