@@ -76,7 +76,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                   = $(this).attr('name');
             var value                  = $(this).val();
             storageObject.fields[name] = value; 
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Text input:  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Radios
@@ -84,7 +84,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                   = $(this).attr('name');
             var value                  = $(this).val();
             storageObject.radios[name] = value;
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Radio button:  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Checkbox
@@ -92,7 +92,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                       = $(this).attr('name');
             var value                      = $(this).val();
             storageObject.checkboxes[name] = value;
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Checkbox:  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Dropdowns
@@ -100,7 +100,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                      = $(this).attr('name');
             var value                     = $(this).children(':selected').val();
             storageObject.dropdowns[name] = value;
-            console.log('name: ' + name + ' selected: ' + value);
+            console.log('Dropdown:  ' + 'name: ' + name + ' selected: ' + value);
         });
         
         var storageObjectString = JSON.stringify(storageObject);
@@ -121,7 +121,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return;
         }
 
-        console.log('Parsing: ' + storage[storageKey]);
+        console.log('LOAD: JSON ' + storage[storageKey]);
         var storageObject = JSON.parse(storage[storageKey]);
 
         //Fields
@@ -131,7 +131,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.fields[name];
             var selector = 'input[name="' + name + '"]';
             obj.find(selector).val(value);
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Text input:  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Radios
@@ -146,7 +146,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.radios[name];
             var selector = 'input[name="' + name + '"][value="' + value + '"]';
             obj.find(selector).prop('checked', true);
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Radio button:  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Checkbox
@@ -161,7 +161,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.checkboxes[name];
             var selector = 'input[name="' + name + '"][value="' + value + '"]';
             obj.find(selector).prop('checked', true);
-            console.log('name: ' + name + ' value: ' + value);
+            console.log('Checkbox:  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Dropdowns
@@ -171,6 +171,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.dropdowns[name];
             var selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
             obj.find(selector).prop('selected', true);
+            console.log('Dropdown:  ' + 'name: ' + name + ' selected: ' + value);
         }
 
     };
