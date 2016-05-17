@@ -23,7 +23,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 **********************************************************************************************/
 
 (function($, window) {
-    console.log('RUN');
+    console.log('Savr started!');
     // Parameters
     var path       = window.location.pathname;
 
@@ -106,7 +106,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
         var storageObjectString = JSON.stringify(storageObject);
         storage[storageKey]     = storageObjectString;
 
-        console.log(storage[storageKey]);
+        console.log('SAVE: JSON ' + storage[storageKey]);
     };
 
     /**
@@ -176,7 +176,6 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
 
     var exists = function(storageKey){
-        //console.log('EXISTS' + storageKey);
         if(typeof storage[storageKey] == 'undefined') {
             return false;
         }
