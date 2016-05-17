@@ -1,6 +1,4 @@
 $(document).ready(function(){
-	$('form').savr('start');
-
 	$('#save').click(function(){
 		$('form').savr('save');
 	});
@@ -12,5 +10,11 @@ $(document).ready(function(){
 	});
 	$('#exists').click(function(){
 		console.log($('form').savr('exists'));
+	});
+	$('#start').click(function(){
+		$('form').savr('start');
+	});
+	$('#stop').click(function(){
+		$('form').savr('stop');
 	});
 })
