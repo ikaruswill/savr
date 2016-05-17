@@ -29,7 +29,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     var options = {
         namespace     : 'savr',
-        saveInterval  : '10000',
+        saveInterval  : '5000',
         clearOnSubmit : true,
         storageType   : 'localStorage'
     };
@@ -195,7 +195,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
 
     var stopTimer = function(storageKey){
-        window.clearInterval(timers.storageKey);
+        window.clearInterval(timers[storageKey]);
     };
 
     var supports = function(type) {
