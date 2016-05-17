@@ -25,7 +25,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
 (function($, window) {
     console.log('RUN');
     // Parameters
-    var path = window.location.pathname;
+    var path       = window.location.pathname;
+    path           = path.slice(1, -1);
+    var pathParams = path.split('/');
 
     var options = {
         namespace     : 'savr',
@@ -55,13 +57,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
         }
 
         // Set storageKey
-        if(identifierSuffix == ''){
-            storageKey = [options.namespace, path];
-        } else {
-            storageKey = [options.namespace, path, identifierSuffix];    
+        storageKey = [];
+        storageKey.push(options.namespace);
+        Array.prototype.push.apply(storageKey, pathParams);
+        if(identifierSuffix !== ''){
+            storageKey.push(identifierSuffix);
         }
         storageKey = storageKey.join('.');
-
     };
 
     /**
