@@ -46,12 +46,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
         var identifierSuffix = '';
 
         // Identify the selected form(s)
-        if(obj.attr('id') !== 'undefined'){
+        if(typeof obj.attr('id') != 'undefined'){
             identifierSuffix = obj.attr('id');
-        } else if(obj.attr('name') !== 'undefined'){
+        } else if(typeof obj.attr('name') != 'undefined'){
             identifierSuffix = obj.attr('name');
-        } else if(obj.attr('class') !== 'undefined'){
-            identifierSuffix = obj.attr('class');
+        } else if(typeof obj.attr('class') != 'undefined'){
+            identifierSuffix = obj.attr('class').split(' ').join('.');
         }
 
         // Set storageKey
