@@ -46,16 +46,20 @@ to prevent data loss on closing the browser or navigating away when filling in f
         var identifierSuffix = '';
 
         // Identify the selected form(s)
-        if(identifierSuffix = obj.attr('id') !== 'undefined'){
+        if(obj.attr('id') !== 'undefined'){
             identifierSuffix = obj.attr('id');
-        } else if(identifierSuffix = obj.attr('name') !== 'undefined'){
+        } else if(obj.attr('name') !== 'undefined'){
             identifierSuffix = obj.attr('name');
-        } else if(identifierSuffix = obj.attr('class') !== 'undefined'){
+        } else if(obj.attr('class') !== 'undefined'){
             identifierSuffix = obj.attr('class');
         }
 
         // Set storageKey
-        storageKey = [options.namespace, path, identifierSuffix];
+        if(identifierSuffix == ''){
+            storageKey = [options.namespace, path];
+        } else {
+            storageKey = [options.namespace, path, identifierSuffix];    
+        }
         storageKey = storageKey.join('.');
 
     };
