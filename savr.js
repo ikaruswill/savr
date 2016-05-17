@@ -26,8 +26,6 @@ to prevent data loss on closing the browser or navigating away when filling in f
     console.log('RUN');
     // Parameters
     var path       = window.location.pathname;
-    path           = path.slice(1, -1);
-    var pathParams = path.split('/');
 
     var options = {
         namespace     : 'savr',
@@ -57,9 +55,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
         }
 
         // Set storageKey
-        storageKey = [];
-        storageKey.push(options.namespace);
-        Array.prototype.push.apply(storageKey, pathParams);
+        storageKey = [options.namespace, path];
         if(identifierSuffix !== ''){
             storageKey.push(identifierSuffix);
         }
@@ -214,13 +210,19 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return this;
         }
 
+        var exists = true;
+        this.each(function(){
+            setStorageKey($(this));
+            console.log(storageKey);
+            if(typeof storage[storageKey] == 'undefined') {
+                exists = false;
+                return false;
+            }
+        });
+
         // Exists should not return a jQuery object and hence is not chainable
         if(action=='exists'){
-            if(typeof storage[storageKey] == 'undefined') {
-                return false;
-            } else {
-                return true;
-            }
+            return exists;
         }
 
         return this.each(function(){
