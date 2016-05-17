@@ -33,14 +33,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
         clearOnSubmit : true,
         storageType   : 'localStorage'
     };
-    var timer, storageKey;
-    var storage       = window[options.storageType];
-    var storageObject = {
-        fields:{},
-        radios:{},
-        checkboxes:{},
-        dropdowns:{}
-    };
+    var timers  = [];
+    var storage = window[options.storageType];
+    var storageKey;
 
     var setStorageKey = function(obj){
         var identifierSuffix = '';
@@ -68,10 +63,15 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} <form> or any enclosing element
      */
     var save = function(obj){
-        console.log('SAVE');
+        setStorageKey(obj);
+        console.log('SAVE ' + storageKey);
 
-        // Clear object as checkbox checks don't get unset
-        storageObject.checkboxes = {};
+        var storageObject = {
+            fields:{},
+            radios:{},
+            checkboxes:{},
+            dropdowns:{}
+        };
 
         // Fields
         obj.find('input[type="text"]').each(function(){
@@ -117,14 +117,15 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} <form> or any enclosing element
      */
     var load = function(obj){
-        console.log('LOAD');
+        setStorageKey(obj);
+        console.log('LOAD ' + storageKey);
         // Check if first save has been done
         if(typeof storage[storageKey] == 'undefined') {
             return;
         }
 
         console.log('Parsing: ' + storage[storageKey]);
-        storageObject = JSON.parse(storage[storageKey]);
+        var storageObject = JSON.parse(storage[storageKey]);
 
         //Fields
         var fieldNames = Object.keys(storageObject.fields);
@@ -177,7 +178,17 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     };
 
-    var clear = function(){
+    var exists = function(obj){
+        setStorageKey(obj);
+        //console.log('EXISTS' + storageKey);
+        if(typeof storage[storageKey] == 'undefined') {
+            return false;
+        }
+        return true;
+    };
+
+    var clear = function(obj){
+        setStorageKey(obj);
         storage.removeItem(storageKey);
     };
 
@@ -185,10 +196,11 @@ to prevent data loss on closing the browser or navigating away when filling in f
         timer = window.setInterval(function(){
             save(obj);
         }, options.saveInterval);
+        timers[storageKey] = timer;
     };
 
-    var stopTimer = function(){
-        window.clearInterval(timer);
+    var stopTimer = function(obj){
+        window.clearInterval(timers.storageKey);
     };
 
     var supports = function(type) {
@@ -210,24 +222,21 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return this;
         }
 
-        var exists = true;
-        this.each(function(){
-            setStorageKey($(this));
-            console.log(storageKey);
-            if(typeof storage[storageKey] == 'undefined') {
-                exists = false;
-                return false;
-            }
-        });
-
         // Exists should not return a jQuery object and hence is not chainable
-        if(action=='exists'){
-            return exists;
+        if(action == 'exists'){
+            var allExists = true;
+            this.each(function(){
+                allExists = exists($(this));
+                if(!allExists){
+                    return false;
+                }
+            });
+            return allExists;
         }
 
         return this.each(function(){
             setStorageKey($(this));
-
+            console.log('EACH ' + storageKey);
             // Function body
             switch(action){
                 case 'start':
@@ -237,7 +246,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                     stopTimer();
                     break;
                 case 'clear':
-                    clear();
+                    clear($(this));
                     break;
                 case 'save':
                     save($(this));
