@@ -26,14 +26,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
     console.log('Savr started!');
     // Parameters
     var path       = window.location.pathname;
-
+    var timers  = [];
     var options = {
         namespace     : 'savr',
         saveInterval  : '5000',
         clearOnSubmit : true,
         storageType   : 'localStorage'
     };
-    var timers  = [];
     var storage = window[options.storageType];
 
     var getStorageKey = function(obj){
@@ -57,9 +56,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
 
     /**
-     * Takes in a jQuery object and saves all input and select element data into localStorage
+     * Saves all input and select element data into localStorage
      *
-     * @param {jQuery} <form> or any enclosing element
+     * @param {jQuery} obj <form> or any enclosing element
      */
     var save = function(obj, storageKey){
         console.log('SAVE ' + storageKey);
@@ -110,9 +109,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
 
     /**
-     * Takes in a jQuery object and loads all input and select element data from localStorage
+     * Loads all input and select element data from localStorage
      *
-     * @param {jQuery} <form> or any enclosing element
+     * @param {jQuery} obj <form> or any enclosing element
      */
     var load = function(obj, storageKey){
         console.log('LOAD ' + storageKey);
@@ -183,6 +182,49 @@ to prevent data loss on closing the browser or navigating away when filling in f
         return true;
     };
 
+    /**
+     * Checks if the form is in it's default (pristine) state
+     *
+     * @param {jQuery} obj <form> or any enclosing element
+     * @return {boolean} true if form is in it's default state
+     */
+
+    var isDefault = function(obj){
+        var isDefault = true;
+        obj.find('input[type="text"]').each(function(){
+            if($(this).val() != $(this).prop('defaultValue')) {
+                isDefault = false;
+                console.log('Text input ' + $(this).attr('name') + 'is dirty');
+                return false;
+            }
+        });
+
+        if(isDefault == false) return false;
+
+        obj.find('input[type="radio"], input[type="checkbox"]').each(function(){
+            if(this.checked != $(this).prop('defaultChecked')) {
+                isDefault = false;
+                console.log('Radio/Checkbox ' + $(this).attr('name') + 'is dirty');
+                return false;
+            }
+        });
+
+        if(isDefault == false) return false;
+
+        obj.find('select').each(function(){
+            for(var i = 0; i < this.length; i++){
+                var currentOption = this.options[i];
+                if(currentOption.selected != currentOption.defaultSelected) {
+                    isDefault = false;
+                    console.log('Select ' + $(this).attr('name') + 'is dirty');
+                    return false;
+                }
+            }
+        });
+
+        return isDefault;
+    }
+
     var clear = function(storageKey){
         storage.removeItem(storageKey);
     };
@@ -228,6 +270,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 }
             });
             return allExists;
+        } else if(action =='isDefault'){
+            return isDefault(this);
         }
 
         return this.each(function(){
