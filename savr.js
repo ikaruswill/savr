@@ -259,19 +259,22 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return this;
         }
 
-        // Exists should not return a jQuery object and hence is not chainable
-        if(action == 'exists'){
-            var allExists = true;
-            this.each(function(){
-                var storageKey = getStorageKey($(this));
-                allExists = exists(storageKey);
-                if(!allExists){
-                    return false;
-                }
-            });
-            return allExists;
-        } else if(action =='isPristine'){
-            return isPristine(this);
+        // Exists and isPristine should not return a jQuery object and hence is not chainable
+        switch(action){
+            case 'exists':
+                var allExists = true;
+                this.each(function(){
+                    var storageKey = getStorageKey($(this));
+                    allExists = exists(storageKey);
+                    if(!allExists){
+                        return false;
+                    }
+                });
+                return allExists;
+            case 'isPristine':
+                return isPristine(this);
+            default:
+                break;
         }
 
         return this.each(function(){
