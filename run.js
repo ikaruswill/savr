@@ -17,7 +17,7 @@ $(document).ready(function(){
 	$('#stop').click(function(){
 		$('form').savr('stop');
 	});
-	$('#is-default').click(function(){
-		console.log($('form').savr('isDefault'));
+	$('#is-pristine').click(function(){
+		console.log($('form').savr('isPristine'));
 	});
 })
