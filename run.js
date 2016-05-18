@@ -20,4 +20,7 @@ $(document).ready(function(){
 	$('#is-pristine').click(function(){
 		console.log($('form').savr('isPristine'));
 	});
+	$('#diff').click(function(){
+		console.log($('form').savr('diff'));
+	});
 })

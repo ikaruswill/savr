@@ -61,6 +61,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
         return storageKeyArr.join('.');
     };
 
+
+
     /**
      * Saves all input and select element data into localStorage
      *
@@ -238,6 +240,75 @@ to prevent data loss on closing the browser or navigating away when filling in f
         return isPristine;
     }
 
+    var diff = function(obj, storageKey){
+        console.log('DIFF ' + storageKey);
+        var diff = false;
+
+        // Check if first save has been done
+        if(typeof storage[storageKey] == 'undefined') {
+            return true;
+        }
+
+        console.log('DIFF: JSON ' + storage[storageKey]);
+        var storageObject = JSON.parse(storage[storageKey]);
+
+         // Fields
+        obj.find('input[type="text"]').each(function(){
+            var name                   = $(this).attr('name');
+            var value                  = $(this).val();
+            if(storageObject.fields[name] != value){
+                diff = true;
+                console.log('[DIFF] [Text input Live]  ' + 'name: ' + name + ' value: ' + value);
+                console.log('[DIFF] [Text input Saved]  ' + 'name: ' + name + ' value: ' + storageObject.fields[name]);
+                return false;
+            }
+        });
+
+        if(diff == true) return diff;
+
+        // Radios
+        obj.find('input[type="radio"]:checked').each(function(){
+            var name                   = $(this).attr('name');
+            var value                  = $(this).val();
+            if(storageObject.radios[name] != value){
+                diff = true;
+                console.log('[DIFF] [Radio button Live]  ' + 'name: ' + name + ' value: ' + value);
+                console.log('[DIFF] [Radio button Saved]  ' + 'name: ' + name + ' value: ' + storageObject.radios[name]);
+                return false;
+            }
+        });
+
+        if(diff == true) return diff;
+
+        // Checkbox
+        obj.find('input[type="checkbox"]:checked').each(function(){
+            var name                       = $(this).attr('name');
+            var value                      = $(this).val();
+            if(storageObject.checkboxes[name] != value){
+                diff = true;
+                console.log('[DIFF] [Checkbox Live]  ' + 'name: ' + name + ' value: ' + value);
+                console.log('[DIFF] [Checkbox Saved]  ' + 'name: ' + name + ' value: ' + storageObject.checkboxes[name]);
+                return false;
+            }
+        });
+
+        if(diff == true) return diff;
+
+        // Dropdowns
+        obj.find('select').each(function(){
+            var name                      = $(this).attr('name');
+            var value                     = $(this).children(':selected').val();
+            if(storageObject.dropdowns[name] != value){
+                diff = true;
+                console.log('[DIFF] [Dropdown Live]  ' + 'name: ' + name + ' value: ' + value);
+                console.log('[DIFF] [Dropdown Saved]  ' + 'name: ' + name + ' value: ' + storageObject.dropdowns[name]);
+                return false;
+            }
+        });
+
+        return diff;
+    }
+
     /**
      * Removes the specified key-value pair in localStorage
      *
@@ -306,7 +377,27 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 });
                 return allExists;
             case 'isPristine':
+                var allPristine = true;
+                this.each(function(){
+                    var storageKey = getStorageKey($(this));
+                    allPristine = isPristine($(this));
+                    if(!allPristine){
+                        return false;
+                    }
+                });
+                return allPristine;
+
                 return isPristine(this);
+            case 'diff':
+                var allDiff = false;
+                this.each(function(){
+                    var storageKey = getStorageKey($(this));
+                    allDiff = diff($(this), storageKey);
+                    if(allDiff){
+                        return false;
+                    }
+                });
+                return allDiff;
             default:
                 break;
         }
