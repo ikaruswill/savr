@@ -35,6 +35,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
     var storage = window[options.storageType];
 
+    /**
+     * Generates the storage key based on the attributes of the object
+     *
+     * @param {jQuery} obj <form> or any enclosing element
+     * @return The storage key in the form of a String
+     */
     var getStorageKey = function(obj){
         var identifierSuffix = '';
 
@@ -59,6 +65,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * Saves all input and select element data into localStorage
      *
      * @param {jQuery} obj <form> or any enclosing element
+     * @param {string} storageKey The key for the data to be saved under
      */
     var save = function(obj, storageKey){
         console.log('SAVE ' + storageKey);
@@ -112,6 +119,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * Loads all input and select element data from localStorage
      *
      * @param {jQuery} obj <form> or any enclosing element
+     * @param {string} storageKey The key from which the data is loaded
      */
     var load = function(obj, storageKey){
         console.log('LOAD ' + storageKey);
@@ -175,6 +183,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     };
 
+    /**
+     * Checks if any data is stored in localStorage under the specified key
+     *
+     * @param {string} storageKey The key to be checked
+     * @return true if data exists under the specified key
+     */
     var exists = function(storageKey){
         if(typeof storage[storageKey] == 'undefined') {
             return false;
@@ -188,7 +202,6 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @return {boolean} true if form is in it's default state
      */
-
     var isPristine = function(obj){
         var isPristine = true;
         obj.find('input[type="text"]').each(function(){
@@ -225,10 +238,21 @@ to prevent data loss on closing the browser or navigating away when filling in f
         return isPristine;
     }
 
+    /**
+     * Removes the specified key-value pair in localStorage
+     *
+     * @param {string} storageKey The key to be checked
+     */
     var clear = function(storageKey){
         storage.removeItem(storageKey);
     };
 
+    /**
+     * Starts saving the data to storage periodically, specified by the saveInterval variable.
+     *
+     * @param {jQuery} obj <form> or any enclosing element
+     * @param {string} storageKey The key for the data and timer to be saved under
+     */
     var startTimer = function(obj, storageKey){
         timer = window.setInterval(function(){
             save(obj, storageKey);
@@ -236,10 +260,20 @@ to prevent data loss on closing the browser or navigating away when filling in f
         timers[storageKey] = timer;
     };
 
+    /**
+     * Stops periodically saving data to storage
+     *
+     * @param {string} storageKey The key in which the timer to be removed is saved under
+     */
     var stopTimer = function(storageKey){
         window.clearInterval(timers[storageKey]);
     };
 
+    /**
+     * Checks for support of the storage type
+     *
+     * @param {string} type The storage type to be checked
+     */
     var supports = function(type) {
         try {
             var _s = window[type];
@@ -259,7 +293,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return this;
         }
 
-        // Exists and isPristine should not return a jQuery object and hence is not chainable
+        // Exists and isPristine does not return a jQuery object and hence is not chainable
         switch(action){
             case 'exists':
                 var allExists = true;
