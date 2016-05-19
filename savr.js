@@ -201,8 +201,10 @@ to prevent data loss on closing the browser or navigating away when filling in f
      */
     var exists = function(storageKey){
         if(typeof storage[storageKey] == 'undefined') {
+            log('[EXISTS][FALSE] StorageKey: ' + storageKey);
             return false;
         }
+        log('[EXISTS][TRUE] StorageKey: ' + storageKey);
         return true;
     };
 
@@ -365,22 +367,23 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var _x = '__storage_test__';
             storage.setItem(_x, _x);
             storage.removeItem(_x);
+            log('[SUPPORTS][TRUE] Type: ' + type);
             return true;
         }
         catch(e) {
+            log('[SUPPORTS][FALSE] Type: ' + type);
             return false;
         }
     };
 
     // jQuery plugin aspect
     $.fn.savr = function(action) {
-        var isSupported = supports(options.storageType);
         if(action == 'isSupported') {
-            return isSupported;
+            return supports(options.storageType);
         }
 
         if(!isSupported) {
-            return this;
+            return supports(options.storageType);
         }
 
         // These actions do not return a jQuery object and hence are not chainable
