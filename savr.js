@@ -382,8 +382,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return supports(options.storageType);
         }
 
-        if(!isSupported) {
-            return supports(options.storageType);
+        if(!supports(options.storageType)) {
+            return this;
         }
 
         // These actions do not return a jQuery object and hence are not chainable
