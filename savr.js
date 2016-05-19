@@ -23,11 +23,11 @@ to prevent data loss on closing the browser or navigating away when filling in f
 **********************************************************************************************/
 
 (function($, window) {
-    console.log('Savr started!');
     // Parameters
-    var path       = window.location.pathname;
-    var timers  = [];
-    var options = {
+    var debugMode = false;
+    var path      = window.location.pathname;
+    var timers    = [];
+    var options   = {
         namespace     : 'savr',
         saveInterval  : '5000',
         clearOnSubmit : true,
@@ -35,13 +35,21 @@ to prevent data loss on closing the browser or navigating away when filling in f
     };
     var storage = window[options.storageType];
 
+    function log(message){
+        if(debugMode){
+            console.log(message);
+        }
+    }
+
+    log('[SAVR] Initialized!');
+
     /**
      * Generates the storage key based on the attributes of the object
      *
      * @param {jQuery} obj <form> or any enclosing element
      * @return The storage key in the form of a String
      */
-    var getStorageKey = function(obj){
+    function getStorageKey(obj){
         var identifierSuffix = '';
 
         // Identify the selected form(s)
@@ -69,8 +77,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @param {string} storageKey The key for the data to be saved under
      */
-    var save = function(obj, storageKey){
-        console.log('[SAVE] StorageKey: ' + storageKey);
+    function save(obj, storageKey){
+        log('[SAVE] StorageKey: ' + storageKey);
 
         var storageObject = {
             fields:{},
@@ -84,7 +92,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                   = $(this).attr('name');
             var value                  = $(this).val();
             storageObject.fields[name] = value; 
-            console.log('[SAVE] [Text input]  ' + 'name: ' + name + ' value: ' + value);
+            log('[SAVE] [Text input]  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Radios
@@ -92,7 +100,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                   = $(this).attr('name');
             var value                  = $(this).val();
             storageObject.radios[name] = value;
-            console.log('[SAVE] [Radio button]  ' + 'name: ' + name + ' value: ' + value);
+            log('[SAVE] [Radio button]  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Checkbox
@@ -100,7 +108,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                       = $(this).attr('name');
             var value                      = $(this).val();
             storageObject.checkboxes[name] = value;
-            console.log('[SAVE] [Checkbox]  ' + 'name: ' + name + ' value: ' + value);
+            log('[SAVE] [Checkbox]  ' + 'name: ' + name + ' value: ' + value);
         });
 
         // Dropdowns
@@ -108,13 +116,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var name                      = $(this).attr('name');
             var value                     = $(this).children(':selected').val();
             storageObject.dropdowns[name] = value;
-            console.log('[SAVE] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
+            log('[SAVE] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         });
         
         var storageObjectString = JSON.stringify(storageObject);
         storage[storageKey]     = storageObjectString;
 
-        console.log('[SAVE] JSON: ' + storage[storageKey]);
+        log('[SAVE] JSON: ' + storage[storageKey]);
     };
 
     /**
@@ -123,14 +131,14 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @param {string} storageKey The key from which the data is loaded
      */
-    var load = function(obj, storageKey){
-        console.log('[LOAD] StorageKey: ' + storageKey);
+    function load(obj, storageKey){
+        log('[LOAD] StorageKey: ' + storageKey);
         // Check if first save has been done
         if(typeof storage[storageKey] == 'undefined') {
             return;
         }
 
-        console.log('[LOAD] JSON: ' + storage[storageKey]);
+        log('[LOAD] JSON: ' + storage[storageKey]);
         var storageObject = JSON.parse(storage[storageKey]);
 
         //Fields
@@ -140,7 +148,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.fields[name];
             var selector = 'input[name="' + name + '"]';
             obj.find(selector).val(value);
-            console.log('[LOAD] [Text input]  ' + 'name: ' + name + ' value: ' + value);
+            log('[LOAD] [Text input]  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Radios
@@ -155,7 +163,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.radios[name];
             var selector = 'input[name="' + name + '"][value="' + value + '"]';
             obj.find(selector).prop('checked', true);
-            console.log('[LOAD] [Radio button]  ' + 'name: ' + name + ' value: ' + value);
+            log('[LOAD] [Radio button]  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Checkbox
@@ -170,7 +178,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.checkboxes[name];
             var selector = 'input[name="' + name + '"][value="' + value + '"]';
             obj.find(selector).prop('checked', true);
-            console.log('[LOAD] [Checkbox]  ' + 'name: ' + name + ' value: ' + value);
+            log('[LOAD] [Checkbox]  ' + 'name: ' + name + ' value: ' + value);
         }
 
         //Dropdowns
@@ -180,7 +188,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value    = storageObject.dropdowns[name];
             var selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
             obj.find(selector).prop('selected', true);
-            console.log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
+            log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         }
 
     };
@@ -204,12 +212,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @return {boolean} true if form is in it's default state
      */
-    var isPristine = function(obj){
+    function isPristine(obj){
         var isPristine = true;
         obj.find('input[type="text"]').each(function(){
             if($(this).val() != $(this).prop('defaultValue')) {
                 isPristine = false;
-                console.log('[ISPRISTINE] [Text input] ' + $(this).attr('name') + ' is dirty');
+                log('[ISPRISTINE] [Text input] ' + $(this).attr('name') + ' is dirty');
                 return false;
             }
         });
@@ -219,7 +227,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
         obj.find('input[type="radio"], input[type="checkbox"]').each(function(){
             if(this.checked != $(this).prop('defaultChecked')) {
                 isPristine = false;
-                console.log('[ISPRISTINE] [Radio/Checkbox] ' + $(this).attr('name') + ' is dirty');
+                log('[ISPRISTINE] [Radio/Checkbox] ' + $(this).attr('name') + ' is dirty');
                 return false;
             }
         });
@@ -231,7 +239,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 var currentOption = this.options[i];
                 if(currentOption.selected != currentOption.defaultSelected) {
                     isPristine = false;
-                    console.log('[ISPRISTINE] [Select] ' + $(this).attr('name') + ' is dirty');
+                    log('[ISPRISTINE] [Select] ' + $(this).attr('name') + ' is dirty');
                     return false;
                 }
             }
@@ -246,8 +254,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @param {string} storageKey The key from which the data is loaded
      */
-    var diff = function(obj, storageKey){
-        console.log('[DIFF] StorageKey: ' + storageKey);
+    function diff(obj, storageKey){
+        log('[DIFF] StorageKey: ' + storageKey);
         var diff = false;
 
         // Check if first save has been done
@@ -255,7 +263,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             return true;
         }
 
-        console.log('[DIFF] JSON: ' + storage[storageKey]);
+        log('[DIFF] JSON: ' + storage[storageKey]);
         var storageObject = JSON.parse(storage[storageKey]);
 
          // Fields
@@ -264,8 +272,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value                  = $(this).val();
             if(storageObject.fields[name] != value){
                 diff = true;
-                console.log('[DIFF] [Text input Live]  ' + 'name: ' + name + ' value: ' + value);
-                console.log('[DIFF] [Text input Saved]  ' + 'name: ' + name + ' value: ' + storageObject.fields[name]);
+                log('[DIFF] [Text input Live]  ' + 'name: ' + name + ' value: ' + value);
+                log('[DIFF] [Text input Saved]  ' + 'name: ' + name + ' value: ' + storageObject.fields[name]);
                 return false;
             }
         });
@@ -278,8 +286,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value                  = $(this).val();
             if(storageObject.radios[name] != value){
                 diff = true;
-                console.log('[DIFF] [Radio button Live]  ' + 'name: ' + name + ' value: ' + value);
-                console.log('[DIFF] [Radio button Saved]  ' + 'name: ' + name + ' value: ' + storageObject.radios[name]);
+                log('[DIFF] [Radio button Live]  ' + 'name: ' + name + ' value: ' + value);
+                log('[DIFF] [Radio button Saved]  ' + 'name: ' + name + ' value: ' + storageObject.radios[name]);
                 return false;
             }
         });
@@ -292,8 +300,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value                      = $(this).val();
             if(storageObject.checkboxes[name] != value){
                 diff = true;
-                console.log('[DIFF] [Checkbox Live]  ' + 'name: ' + name + ' value: ' + value);
-                console.log('[DIFF] [Checkbox Saved]  ' + 'name: ' + name + ' value: ' + storageObject.checkboxes[name]);
+                log('[DIFF] [Checkbox Live]  ' + 'name: ' + name + ' value: ' + value);
+                log('[DIFF] [Checkbox Saved]  ' + 'name: ' + name + ' value: ' + storageObject.checkboxes[name]);
                 return false;
             }
         });
@@ -306,8 +314,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
             var value                     = $(this).children(':selected').val();
             if(storageObject.dropdowns[name] != value){
                 diff = true;
-                console.log('[DIFF] [Dropdown Live]  ' + 'name: ' + name + ' value: ' + value);
-                console.log('[DIFF] [Dropdown Saved]  ' + 'name: ' + name + ' value: ' + storageObject.dropdowns[name]);
+                log('[DIFF] [Dropdown Live]  ' + 'name: ' + name + ' value: ' + value);
+                log('[DIFF] [Dropdown Saved]  ' + 'name: ' + name + ' value: ' + storageObject.dropdowns[name]);
                 return false;
             }
         });
@@ -320,7 +328,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      *
      * @param {string} storageKey The key to be checked
      */
-    var clear = function(storageKey){
+    function clear(storageKey){
         storage.removeItem(storageKey);
     };
 
@@ -330,7 +338,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {jQuery} obj <form> or any enclosing element
      * @param {string} storageKey The key for the data and timer to be saved under
      */
-    var startTimer = function(obj, storageKey){
+    function startTimer(obj, storageKey){
         timer = window.setInterval(function(){
             save(obj, storageKey);
         }, options.saveInterval);
@@ -342,7 +350,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      *
      * @param {string} storageKey The key in which the timer to be removed is saved under
      */
-    var stopTimer = function(storageKey){
+    function stopTimer(storageKey){
         window.clearInterval(timers[storageKey]);
     };
 
@@ -351,7 +359,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      *
      * @param {string} type The storage type to be checked
      */
-    var supports = function(type) {
+    function supports(type) {
         try {
             var _s = window[type];
             var _x = '__storage_test__';
@@ -410,7 +418,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
         return this.each(function(){
             var storageKey = getStorageKey($(this));
-            console.log('[SAVR] Action: ' + action + ' StorageKey: ' + storageKey);
+            log('[SAVR] Action: ' + action + ' StorageKey: ' + storageKey);
             // Function body
             switch(action){
                 case 'start':
