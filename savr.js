@@ -268,8 +268,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
          // Fields
         obj.find('input[type="text"]').each(function(){
-            var name                   = $(this).attr('name');
-            var value                  = $(this).val();
+            var name  = $(this).attr('name');
+            var value = $(this).val();
             if(storageObject.fields[name] != value){
                 diff = true;
                 log('[DIFF] [Text input Live]  ' + 'name: ' + name + ' value: ' + value);
@@ -282,8 +282,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
         // Radios
         obj.find('input[type="radio"]:checked').each(function(){
-            var name                   = $(this).attr('name');
-            var value                  = $(this).val();
+            var name  = $(this).attr('name');
+            var value = $(this).val();
             if(storageObject.radios[name] != value){
                 diff = true;
                 log('[DIFF] [Radio button Live]  ' + 'name: ' + name + ' value: ' + value);
@@ -296,8 +296,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
         // Checkbox
         obj.find('input[type="checkbox"]:checked').each(function(){
-            var name                       = $(this).attr('name');
-            var value                      = $(this).val();
+            var name  = $(this).attr('name');
+            var value = $(this).val();
             if(storageObject.checkboxes[name] != value){
                 diff = true;
                 log('[DIFF] [Checkbox Live]  ' + 'name: ' + name + ' value: ' + value);
@@ -310,8 +310,8 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
         // Dropdowns
         obj.find('select').each(function(){
-            var name                      = $(this).attr('name');
-            var value                     = $(this).children(':selected').val();
+            var name  = $(this).attr('name');
+            var value = $(this).children(':selected').val();
             if(storageObject.dropdowns[name] != value){
                 diff = true;
                 log('[DIFF] [Dropdown Live]  ' + 'name: ' + name + ' value: ' + value);
@@ -384,7 +384,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 var allExists = true;
                 this.each(function(){
                     var storageKey = getStorageKey($(this));
-                    allExists = exists(storageKey);
+                    allExists      = exists(storageKey);
                     if(!allExists){
                         return false;
                     }
@@ -394,7 +394,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 var allPristine = true;
                 this.each(function(){
                     var storageKey = getStorageKey($(this));
-                    allPristine = isPristine($(this));
+                    allPristine    = isPristine($(this));
                     if(!allPristine){
                         return false;
                     }
@@ -406,7 +406,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 var allDiff = false;
                 this.each(function(){
                     var storageKey = getStorageKey($(this));
-                    allDiff = diff($(this), storageKey);
+                    allDiff        = diff($(this), storageKey);
                     if(allDiff){
                         return false;
                     }
