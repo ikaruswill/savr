@@ -374,10 +374,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     // jQuery plugin aspect
     $.fn.savr = function(action) {
-        var isSupported;
+        var isSupported = supports(options.storageType);
         if(action == 'isSupported') {
-            isSupported = supports(options.storageType);
-            return isSupported
+            return isSupported;
         }
 
         if(!isSupported) {
