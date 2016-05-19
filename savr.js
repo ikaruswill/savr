@@ -374,11 +374,17 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
     // jQuery plugin aspect
     $.fn.savr = function(action) {
-        if(!supports(options.storageType)) {
+        var isSupported;
+        if(action == 'isSupported') {
+            isSupported = supports(options.storageType);
+            return isSupported
+        }
+
+        if(!isSupported) {
             return this;
         }
 
-        // Exists and isPristine does not return a jQuery object and hence is not chainable
+        // These actions do not return a jQuery object and hence are not chainable
         switch(action){
             case 'exists':
                 var allExists = true;
