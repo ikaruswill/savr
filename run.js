@@ -1,4 +1,6 @@
 $(document).ready(function(){
+	var data;
+
 	$('#save').click(function(){
 		$('form').savr('save');
 	});
@@ -22,5 +24,12 @@ $(document).ready(function(){
 	});
 	$('#diff').click(function(){
 		console.log($('form').savr('diff'));
+	});
+	$('#export').click(function(){
+		console.log($('form').savr('export'));
+		data = $('form').savr('export');
+	});
+	$('#import').click(function(){
+		$('form').savr('import', data);
 	});
 })

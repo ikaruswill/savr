@@ -24,12 +24,12 @@ to prevent data loss on closing the browser or navigating away when filling in f
 
 (function($, window) {
     // Parameters
-    var debugMode = false;
+    var debugMode = true;
     var path      = window.location.pathname;
     var timers    = [];
     var options   = {
         namespace     : 'savr',
-        saveInterval  : '5000',
+        saveInterval  : '1000',
         clearOnSubmit : true,
         storageType   : 'localStorage'
     };
@@ -376,8 +376,18 @@ to prevent data loss on closing the browser or navigating away when filling in f
         }
     };
 
+    function get(storageKey){
+        return storage[storageKey];
+    }
+
+    function set(obj, storageKey, data){
+        storage[storageKey] = data;
+    }
+
     // jQuery plugin aspect
-    $.fn.savr = function(action) {
+    $.fn.savr = function(action, data) {
+        data = data || 0;
+
         if(action == 'isSupported') {
             return supports(options.storageType);
         }
@@ -420,6 +430,13 @@ to prevent data loss on closing the browser or navigating away when filling in f
                     }
                 });
                 return allDiff;
+            case 'export':
+                var allData = [];
+                this.each(function(){
+                    var storageKey = getStorageKey($(this));
+                    allData[storageKey] = get(storageKey);
+                });
+                return allData;
             default:
                 break;
         }
@@ -443,6 +460,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
                     break;
                 case 'load':
                     load($(this), storageKey);
+                    break;
+                case 'import':
+                    set($(this), storageKey, data[storageKey]);
                     break;
                 default:
                     break;
