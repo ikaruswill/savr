@@ -431,7 +431,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                 });
                 return allDiff;
             case 'export':
-                var allData = [];
+                var allData = {};
                 this.each(function(){
                     var storageKey = getStorageKey($(this));
                     allData[storageKey] = get(storageKey);
