@@ -251,7 +251,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
     }
 
     /**
-     * Checks whether the form is different from the form data saved
+     * Checks whether the current form state is different from the form state saved
      *
      * @param {jQuery} obj <form> or any enclosing element
      * @param {string} storageKey The key from which the data is loaded
@@ -376,11 +376,23 @@ to prevent data loss on closing the browser or navigating away when filling in f
         }
     };
 
+    /**
+     * Retrieves the stored form data
+     *
+     * @param {string} storageKey The key in which the timer to be removed is saved under
+     * @return {object} The javascript object in which the form data is stored in
+     */
     function get(storageKey){
         return storage[storageKey];
     }
 
-    function set(obj, storageKey, data){
+
+    /**
+     * Sets the storage with new data
+     *
+     * @param {object} data The javascript object in which the new form data is stored in
+     */
+    function set(storageKey, data){
         storage[storageKey] = data;
     }
 
@@ -462,7 +474,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
                     load($(this), storageKey);
                     break;
                 case 'import':
-                    set($(this), storageKey, data[storageKey]);
+                    set(storageKey, data[storageKey]);
                     break;
                 default:
                     break;

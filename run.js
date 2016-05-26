@@ -26,10 +26,11 @@ $(document).ready(function(){
 		console.log($('form').savr('diff'));
 	});
 	$('#export').click(function(){
-		console.log($('form').savr('export'));
 		data = $('form').savr('export');
+		$('#exported').val(JSON.stringify(data));
 	});
 	$('#import').click(function(){
+		data = JSON.parse($('#toImport').val());
 		$('form').savr('import', data);
 	});
 })
