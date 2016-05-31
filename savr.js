@@ -188,8 +188,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             name     = dropdownNames[i];
             value    = storageObject.dropdowns[name];
             selector = 'select[name="' + name + '"]';
-            selected = obj.find(selector);
-            selected.val(value);
+            obj.find(selector).val(value);
             log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         }
 
