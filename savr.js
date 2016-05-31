@@ -191,7 +191,7 @@ use selected value to filter data for another dropdown.
             name     = dropdownNames[i];
             value    = storageObject.dropdowns[name];
             selector = 'select[name="' + name + '"]';
-            obj.find(selector).val(value).triggerHandler('change';
+            obj.find(selector).val(value).triggerHandler('change');
             log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         }
 
