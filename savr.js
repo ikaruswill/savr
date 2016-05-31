@@ -132,7 +132,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {string} storageKey The key from which the data is loaded
      */
     function load(obj, storageKey){
-        var name, value, selector, selected;
+        var name, value, selector;
         log('[LOAD] StorageKey: ' + storageKey);
         // Check if first save has been done
         if(typeof storage[storageKey] == 'undefined') {
