@@ -132,7 +132,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
      * @param {string} storageKey The key from which the data is loaded
      */
     function load(obj, storageKey){
-        var name, value, selector;
+        var name, value, selector, selected;
         log('[LOAD] StorageKey: ' + storageKey);
         // Check if first save has been done
         if(typeof storage[storageKey] == 'undefined') {
@@ -187,8 +187,9 @@ to prevent data loss on closing the browser or navigating away when filling in f
         for(var i = 0; i < dropdownNames.length; i++){
             name     = dropdownNames[i];
             value    = storageObject.dropdowns[name];
-            selector = 'select[name="' + name + '"]>option[value="' + value + '"]';
-            obj.find(selector).prop('selected', true);
+            selector = 'select[name="' + name + '"]';
+            selected = obj.find(selector);
+            selected.val(value);
             log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         }
 
