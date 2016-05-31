@@ -20,6 +20,9 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
 Savr is a script that saves (the day) your form states by using your browser's local storage
 to prevent data loss on closing the browser or navigating away when filling in forms.
 
+NOTE: All dropdown change events should be namespaced except for those with handlers that 
+use selected value to filter data for another dropdown.
+
 **********************************************************************************************/
 
 (function($, window) {
@@ -114,7 +117,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
         // Dropdowns
         obj.find('select').each(function(){
             var name                      = $(this).attr('name');
-            var value                     = $(this).children(':selected').val();
+            var value                     = $(this).val();
             storageObject.dropdowns[name] = value;
             log('[SAVE] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         });
@@ -188,7 +191,7 @@ to prevent data loss on closing the browser or navigating away when filling in f
             name     = dropdownNames[i];
             value    = storageObject.dropdowns[name];
             selector = 'select[name="' + name + '"]';
-            obj.find(selector).val(value);
+            obj.find(selector).val(value).triggerHandler('change';
             log('[LOAD] [Dropdown]  ' + 'name: ' + name + ' selected: ' + value);
         }
 
