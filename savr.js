@@ -30,13 +30,13 @@ use selected value to filter data for another dropdown.
     var debugMode = true;
     var path      = window.location.pathname;
     var timers    = [];
-    var options   = {
+    var defaults  = {
         namespace     : 'savr',
         saveInterval  : '1000',
         clearOnSubmit : true,
         storageType   : 'localStorage'
     };
-    var storage = window[options.storageType];
+    var storage, options;
 
     function log(message){
         if(debugMode){
@@ -384,9 +384,10 @@ use selected value to filter data for another dropdown.
      * Retrieves the stored form data
      *
      * @param {string} storageKey The key in which the timer to be removed is saved under
-     * @return {object} The javascript object in which the form data is stored in
+     * @return {string} The JSON String which encodes the object in which the form data is stored in
      */
     function get(storageKey){
+        log('[GET] StorageKey: ' + storageKey);
         return storage[storageKey];
     }
 
@@ -394,15 +395,24 @@ use selected value to filter data for another dropdown.
     /**
      * Sets the storage with new data
      *
-     * @param {object} data The javascript object in which the new form data is stored in
+     * @param {string} data The JSON String which encodes the object in which the new form data is stored in
      */
     function set(storageKey, data){
-        storage[storageKey] = data;
+        log('[SET] StorageKey: ' + storageKey + ' Data: ' + data);
+        if(data) {
+            storage[storageKey] = data;
+            return;
+        }
+        log('[SET][ERROR] Data is ' + data);
     }
 
     // jQuery plugin aspect
-    $.fn.savr = function(action, data) {
-        data = data || 0;
+    $.fn.savr = function(action, userOptions) {
+        options = $.extend({}, defaults, userOptions);
+        storage = window[options.storageType];
+        if(userOptions){
+            log('[SAVR] Options set: ' + JSON.stringify(options, null, 2));
+        }
 
         if(action == 'isSupported') {
             return supports(options.storageType);
@@ -475,7 +485,7 @@ use selected value to filter data for another dropdown.
                     load($(this), storageKey);
                     break;
                 case 'import':
-                    set(storageKey, data[storageKey]);
+                    set(storageKey, options.data[storageKey]);
                     break;
                 default:
                     break;

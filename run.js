@@ -31,6 +31,6 @@ $(document).ready(function(){
 	});
 	$('#import').click(function(){
 		data = JSON.parse($('#toImport').val());
-		$('form').savr('import', data);
+		$('form').savr('import', {data: data});
 	});
 })
