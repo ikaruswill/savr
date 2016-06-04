@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	var data;
+	//$('form').focusin(function(){$('form').savr('start')});
+	//$('form').focusout(function(){$('form').savr('stop')});
 
 	$('#save').click(function(){
 		$('form').savr('save');
