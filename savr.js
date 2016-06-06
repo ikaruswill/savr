@@ -27,7 +27,7 @@ use selected value to filter data for another dropdown.
 
 (function($, window) {
     // Parameters
-    var debugMode = true;
+    var debugMode = false;
     var path      = window.location.pathname;
     var timers    = [];
     var defaults  = {
